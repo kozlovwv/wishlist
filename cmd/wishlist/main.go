@@ -14,6 +14,7 @@ import (
 	"wishlist/internal/config"
 	"wishlist/internal/infrastructure/in"
 	"wishlist/internal/infrastructure/in/handlers"
+	"wishlist/internal/infrastructure/in/middleware"
 	"wishlist/internal/infrastructure/out"
 	"wishlist/internal/infrastructure/out/repos"
 
@@ -48,14 +49,24 @@ func main() {
 	defer dbpool.Close()
 
 	userRepo := repos.NewUserRepo(dbpool)
+	wishlistRepo := repos.NewWishlistRepo(dbpool)
+	itemRepo := repos.NewItemRepo(dbpool)
+
 	hasher := out.NewBcryptHasher()
 	tokenManager := out.NewJWTManager(cfg.JWTSecret, 24*time.Hour)
+	publicTokenGenerator := out.NewPublicTokenGenerator()
 
 	authService := application.NewAuthService(userRepo, hasher, tokenManager)
+	wishlistService := application.NewWishlistService(wishlistRepo, publicTokenGenerator)
+	itemService := application.NewItemService(itemRepo, wishlistRepo)
 
 	authHandler := handlers.NewAuthHandler(authService)
+	wishlistHandler := handlers.NewWishlistHandler(wishlistService, itemService)
+	itemHandler := handlers.NewItemHandler(itemService, wishlistService)
 
-	router := in.NewRouter(authHandler)
+	authMiddleware := middleware.NewAuthMiddleware(tokenManager)
+
+	router := in.NewRouter(authHandler, wishlistHandler, itemHandler, authMiddleware)
 
 	server := &http.Server{
 		Addr:    cfg.HTTPAddr,
