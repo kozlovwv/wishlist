@@ -36,7 +36,7 @@ type PasswordHasher interface {
 	Hash(password string) (string, error)
 	Verify(password, hash string) bool
 }
- 
+
 type TokenManager interface {
 	Generate(userID int64) (string, error)
 	Parse(token string) (int64, error)

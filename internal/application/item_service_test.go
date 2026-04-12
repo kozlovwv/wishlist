@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	gomock "go.uber.org/mock/gomock"
 	"github.com/stretchr/testify/require"
+	gomock "go.uber.org/mock/gomock"
 
 	"wishlist/internal/application"
 	"wishlist/internal/domain"
