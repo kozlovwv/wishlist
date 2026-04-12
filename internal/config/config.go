@@ -3,14 +3,14 @@ package config
 import "github.com/caarlos0/env/v11"
 
 type Config struct {
-	HTTPAddr  string `env:"HTTP_ADDR" envDefault:":8080"`
-	JWTSecret string `env:"JWT_SECRET" envDefault:"secret"`
+	HTTPAddr  string `env:"HTTP_ADDR"`
+	JWTSecret string `env:"JWT_SECRET"`
 
-	DBHost     string `env:"DB_HOST" envDefault:"localhost"`
-	DBPort     string `env:"DB_PORT" envDefault:"5432"`
-	DBUser     string `env:"DB_USER" envDefault:"postgres"`
-	DBPassword string `env:"DB_PASSWORD" envDefault:"password"`
-	DBName     string `env:"DB_NAME" envDefault:"mydb"`
+	DBHost     string `env:"DB_HOST"`
+	DBPort     string `env:"DB_PORT"`
+	DBUser     string `env:"DB_USER"`
+	DBPassword string `env:"DB_PASSWORD"`
+	DBName     string `env:"DB_NAME"`
 }
 
 func LoadConfig() (*Config, error) {
