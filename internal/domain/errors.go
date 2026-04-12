@@ -5,7 +5,6 @@ import "errors"
 var (
 	ErrWishlistForbidden = errors.New("wishlist access forbidden")
 	ErrWishlistNotFound  = errors.New("wishlist not found")
-	ErrItemForbidden     = errors.New("item access forbidden")
 	ErrItemNotFound      = errors.New("item not found")
 	ErrItemReserved      = errors.New("item is already reserved")
 
