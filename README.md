@@ -83,24 +83,11 @@ make up
 http://localhost:8080
 ```
 
-Просмотр логов.
-
-```
-make logs
-```
-
-Остановка (graceful shutdown).
-
-```bash
-make down
-```
-
 Запуск unit-тестов с отчетом о покрытии.
 
 ```bash
 make test
 ```
-
 
 ---
 
