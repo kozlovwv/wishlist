@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"wishlist/internal/domain"
@@ -51,16 +52,25 @@ func InternalError(w http.ResponseWriter) {
 }
 
 func FromDomainError(w http.ResponseWriter, err error) {
-	switch err {
-	case domain.ErrUserNotFound, domain.ErrWishlistNotFound, domain.ErrItemNotFound:
+	switch {
+	case isAny(err, domain.ErrUserNotFound, domain.ErrWishlistNotFound, domain.ErrItemNotFound):
 		NotFound(w, err.Error())
-	case domain.ErrUserAlreadyExists, domain.ErrItemReserved:
+	case isAny(err, domain.ErrUserAlreadyExists, domain.ErrItemReserved):
 		Conflict(w, err.Error())
-	case domain.ErrInvalidPassword, domain.ErrInvalidToken:
+	case isAny(err, domain.ErrInvalidPassword, domain.ErrInvalidToken):
 		Unauthorized(w, err.Error())
-	case domain.ErrWishlistForbidden:
+	case isAny(err, domain.ErrWishlistForbidden):
 		Forbidden(w, err.Error())
 	default:
 		InternalError(w)
 	}
+}
+
+func isAny(err error, targets ...error) bool {
+	for _, target := range targets {
+		if errors.Is(err, target) {
+			return true
+		}
+	}
+	return false
 }
